@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flight Price Advisor</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<h1>✈️ Flight Price Predictor</h1>
+
+<label>Airline:</label>
+<input id="airline" value="IndiGo"><br><br>
+
+<label>Source:</label>
+<input id="source" value="Delhi"><br><br>
+
+<label>Destination:</label>
+<input id="destination" value="Cochin"><br><br>
+
+<label>Date:</label>
+<input id="date" value="24/03/2019"><br><br>
+
+<label>Departure Time:</label>
+<input id="dep" value="22:20"><br><br>
+
+<label>Arrival Time:</label>
+<input id="arr" value="01:10"><br><br>
+
+<label>Duration:</label>
+<input id="duration" value="2h 50m"><br><br>
+
+<label>Stops:</label>
+<input id="stops" value="non-stop"><br><br>
+
+<button onclick="predict()">Predict</button>
+
+<h2 id="result"></h2>
+
+<script>
+async function predict() {
+    const data = {
+        Airline: document.getElementById("airline").value,
+        Date_of_Journey: document.getElementById("date").value,
+        Source: document.getElementById("source").value,
+        Destination: document.getElementById("destination").value,
+        Route: "DEL → COK",
+        Dep_Time: document.getElementById("dep").value,
+        Arrival_Time: document.getElementById("arr").value,
+        Duration: document.getElementById("duration").value,
+        Total_Stops: document.getElementById("stops").value,
+        Additional_Info: "No info"
+    };
+
+    const res = await fetch("http://127.0.0.1:8000/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    document.getElementById("result").innerText =
+        "Price: ₹" + result.predicted_price +
+        " | " + result.recommendation;
+}
+</script>
+
+</body>
+</html>
